@@ -1,0 +1,46 @@
+
+#--------------------------- Random Distance Values
+inputMatrixSorted<-sort(inputMatrix)
+MatrixECDF<-ecdf(inputMatrixSorted) #makes an empirical cumulative distribution function, allowing the ks.test to process with significantly less overhead
+sampleSizes<-c(5000, 50000, 500000, 5000000)
+replicates<-50
+sampleMax<-42663
+
+Z<-matrix(NaN, length(sampleSizes), replicates)
+tempxx<-1
+for (x in sampleSizes){
+    for (y in 1:replicates){
+    #samp1<-sample(1:sampMax,x, replace=T)
+    #samp2<-sample(1:sampMax,x, replace=T)
+    #matrixSample<-inputMatrix[cbind(samp1, samp2)]
+    matrixSample<-inputMatrix[sample(1:(sampMax*sampMax), x)]
+    #Z[tempxx,y]<-ks.test(sort(matrixSample),inputMatrixSorted)[[1]]
+    Z[tempxx,y]<-ks.test(sort(matrixSample),MatrixECDF)[[1]]
+    
+    } 
+    tempxx<-tempxx+1
+}
+
+#--------------------------- Random Sequences
+
+inputMatrixSorted<-sort(inputMatrix)
+MatrixECDF<-ecdf(inputMatrixSorted) #makes an empirical cumulative distribution function, allowing the ks.test to process with significantly less overhead
+sampleSizes<-c(200, 2000, 20000, 40000)
+replicates<-50
+sampleMax<-42663
+
+Z<-matrix(NaN, length(sampleSizes), replicates)
+tempxx<-1
+for (x in sampleSizes){
+    for (y in 1:replicates){
+    #samp1<-sample(1:sampMax,x, replace=T)
+    #samp2<-sample(1:sampMax,x, replace=T)
+    #matrixSample<-inputMatrix[cbind(samp1, samp2)]
+    samp<-sample(1:(sampMax), x)
+    matrixSample<-inputMatrix[samp, samp]
+    #Z[tempxx,y]<-ks.test(sort(matrixSample),inputMatrixSorted)[[1]]
+    Z[tempxx,y]<-ks.test(sort(matrixSample),MatrixECDF)[[1]]
+    
+    } 
+    tempxx<-tempxx+1
+}
